@@ -53,15 +53,20 @@ The configuration options are as follows:
    function from |libsass|.
    Note that source map options are
    currently ignored.
+   To generate source maps, use
+   the ``source_maps`` option described below.
 - ``variables``
    A dictionary which will be converted into SASS variables
    and inserted before the contents of the file specified
    in ``entry``. The prefix ``$`` is not needed.
-- ``stylesheet``
+- ``add_css_file``
    By default, the extension will automatically tell Sphinx
    to add a link to the compiled CSS file.
    If this is not wanted, adding this key and setting
    it to ``False`` will not add the link.
+- ``source_maps``
+   Set to ``True`` to generate source maps.
+   Source maps are always embedded.
 
 Configuration from an extension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
