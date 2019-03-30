@@ -48,7 +48,9 @@ def compile_sass_config(app, config):
     except (AttributeError, IndexError):
         static_dir = ''
 
-    entry = Path(app.confdir) / config['entry']
+    entry = Path(config['entry'])
+    if not entry.is_absolute():
+        entry = Path(app.confdir) / config['entry']
     css_output = build_dir / static_dir / config['output']
     srcmap_output = ''
 
