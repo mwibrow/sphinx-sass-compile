@@ -18,6 +18,7 @@ from tests.fixtures import test_extension1, test_extension2
 
 from tests.helpers import (
     BaseSphinxTestCase,
+    get_source_mapping_url,
     make_conf_py,
     parse_css)
 
@@ -270,6 +271,58 @@ class TestCompileSassConfig(BaseSphinxTestCase):
             compile_options=dict(
                 source_map_filename='main.css.map'
             ))
+        app = self.get_sphinx_app()
+        compile_sass_config(app, config)
+        _, css = parse_css(self.output, raw=True)
+        self.assertIn('sourceMappingURL', css)
+        self.assertTrue(os.path.exists(
+            os.path.join(os.path.dirname(self.output), 'main.css.map')))
+
+    def test_external_source_maps_different_path(self):
+        """Check external source maps produced with different path"""
+
+        source_map_filename = os.path.join('maps', 'main.css.map')
+        config = dict(
+            entry=self.entry,
+            output=self.output,
+            compile_options=dict(
+                source_map_filename=source_map_filename
+            ))
+        app = self.get_sphinx_app()
+        compile_sass_config(app, config)
+
+        _, css = parse_css(self.output, raw=True)
+        self.assertIn('sourceMappingURL', css)
+
+        srcmap_url = get_source_mapping_url(css)
+        self.assertEqual(srcmap_url, source_map_filename)
+
+        self.assertTrue(os.path.exists(
+            os.path.join(
+                os.path.dirname(self.output), source_map_filename)))
+
+    def test_embedded_source_map_config(self):
+        """Check embeded source map produced using config option"""
+        config = dict(
+            entry=self.entry,
+            output=self.output,
+            source_map='embed')
+
+        app = self.get_sphinx_app()
+        compile_sass_config(app, config)
+        rules, css = parse_css(self.output, raw=True)
+        self.assertIn('sourceMappingURL', css)
+        self.assertEqual(len(rules), 2)
+        for selector in self.selectors:
+            self.assertIn(selector, rules)
+            self.assertDictEqual(rules[selector], {'color': 'red'})
+
+    def test_external_source_maps_config(self):
+        """Check external source maps produced using config option"""
+        config = dict(
+            entry=self.entry,
+            output=self.output,
+            source_map='file')
         app = self.get_sphinx_app()
         compile_sass_config(app, config)
         _, css = parse_css(self.output, raw=True)

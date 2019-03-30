@@ -5,6 +5,7 @@
 """
 
 import os
+import re
 import tempfile
 import unittest
 
@@ -100,3 +101,15 @@ def parse_css(css, raw=False):
     if raw:
         return rules, content
     return rules
+
+
+def get_source_mapping_url(css):
+    """Extract the sourceMappingURL from a css string."""
+    # /*# sourceMappingURL=main.scss.map */
+    match = re.search(
+        r'^\s*/\*# sourceMappingURL=(.*?)\s*\*/',
+        css,
+        flags=re.RegexFlag.MULTILINE | re.RegexFlag.IGNORECASE)
+    if match:
+        return match.groups()[0]
+    return None

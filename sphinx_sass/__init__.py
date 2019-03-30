@@ -59,7 +59,8 @@ def compile_sass_config(app, config):
         compile_options = {key: value for key, value in compile_options if not 'source' in key}
         compile_options['source_map_root'] = 'file://{}'.format(str(entry.parent))
         if source_map == 'file':
-            compile_options['source_map_filename'] = '{}{}map'.format(entry.name, os.path.extsep)
+            compile_options['source_map_filename'] = '{}{}map'.format(
+                css_output.name, os.path.extsep)
         elif source_map == 'embed':
             compile_options['source_map_embed'] = True
 
