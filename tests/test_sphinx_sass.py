@@ -8,6 +8,7 @@ import os
 import unittest
 
 from sphinx_sass import (
+    chdir,
     compile_sass,
     compile_sass_config,
     run_sass,
@@ -231,6 +232,29 @@ class TestCompileSassConfig(BaseSphinxTestCase):
             self.entry,
             contents='$color: red !default; .document { h1, h2 { color: $color; } }')
         self.selectors = ['.document h1', '.document h2']
+
+    def test_relative_entry_path(self):
+        """Test relative entry path."""
+
+        entry = os.path.basename(self.entry)
+        with chdir(os.path.dirname(self.entry)):
+            self.create_file(
+                entry,
+                contents='$color: red !default; .document { h1, h2 { color: $color; } }')
+
+        config = dict(
+            entry=entry,
+            output=self.output)
+
+        app = self.get_sphinx_app()
+        compile_sass_config(app, config)
+        self.assertTrue(os.path.exists(self.output))
+        rules, css = parse_css(self.output, raw=True)
+        self.assertNotIn('sourceMappingURL', css)
+        self.assertEqual(len(rules), 2)
+        for selector in self.selectors:
+            self.assertIn(selector, rules)
+            self.assertDictEqual(rules[selector], {'color': 'red'})
 
     def test_no_source_map(self):
         """Check defaults do not produce source map."""
