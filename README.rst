@@ -64,8 +64,8 @@ The configuration options are as follows:
    A convenience option for automatticaly setting
    the ``compile_options`` for source maps.
    Setting this option to the value ``embed`` will generate
-   embedding source maps. Usimg the value ``file``
-   will generate an external sourcemap.
+   embedded source maps. Using the value ``file``
+   will generate an external source map.
 
 
 Configuration from an extension
