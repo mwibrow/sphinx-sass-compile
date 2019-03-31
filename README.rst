@@ -90,6 +90,53 @@ The configuration is the same as when used
 in ``conf.py``, except that the
 ``entry`` path should be an absolute path.
 
+Passing variables to the SASS compiler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In rare cases, it may be desirable to pass
+variables from ``conf.py`` (or an extension initialisation function)
+to the SASS compiler. This can be achieved using custom importers.
+
+For example, given the entry point ``main.scss``:
+
+.. code-block:: scss
+
+   @import "abstract";
+
+   h1 {
+      color: $headline;
+   }
+
+and a corresponding abstract file ``abstract.scss`` in the same directory:
+
+.. code:: scss
+
+   $headline: red;
+
+A custom importer can be defined which will be called whenever
+the compile encouters the ``@import`` statement:
+
+.. code:: python
+
+   def abstract_importer(path, prev):
+       if path == 'abstract':
+          return (path, '$headline: blue;')
+       return None
+
+This can be added to the compile options using the
+``importers`` option:
+
+.. code:: python
+
+   compile_options = dict(
+      importers=[(0, abstract_importer)]
+   )
+
+Where the first value in the tuple represents the
+relative priority of the custom importer.
+When compiled, the return value of the ``abstract_importer``
+will be used instead of the contents of ``abstract.scss``.
+
 Notes
 ~~~~~
 
