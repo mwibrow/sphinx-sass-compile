@@ -18,15 +18,12 @@ Configuration from ``conf.py``
 
 To configure the extension from ``conf.py``
 use the ``sass_configs`` variable.
-This is a dictionary of dictionaries,
+This is a list of dictionaries,
 where each subdictionary is a separate configuration.
-Configuration names must be unique, an
-error will be raised if a duplicate name
-is encountered.
 
 .. code:: python
 
-    sass_configs['config_name'] = dict(
+    sass_configs = [dict(
        entry='main.scss',
        output='compiled.css',
        compile_options=dict(
@@ -34,7 +31,7 @@ is encountered.
        ),
        add_css_file=False,
        source_map='embed'
-    )
+    )]
 
 The configuration options are as follows:
 
@@ -73,7 +70,9 @@ Configuration from an extension
 
 To use |package-name| in an extension,
 it is necessary to connect to the ``config-inited``
-event (note this only available from Sphinx v1.8):
+event (note this only available from Sphinx v1.8),
+and the `append` the configuration dictionary to
+``sass_configs``.
 
 .. code::
 
@@ -82,9 +81,9 @@ event (note this only available from Sphinx v1.8):
        app.connect('config-inited', init)
 
     def init(app, config):
-       config.sass_compile_configs['custom-config'] = dict(
+       config.sass_configs.append(dict(
           # configuration
-       )
+       ))
 
 The configuration is the same as when used
 in ``conf.py``, except that the
@@ -102,9 +101,9 @@ For example, given the entry point ``main.scss``:
 .. code-block:: scss
 
    @import "abstract";
-
+   $var: red;
    h1 {
-      color: $headline;
+      color: $var;
    }
 
 and a corresponding abstract file ``abstract.scss`` in the same directory:
