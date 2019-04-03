@@ -6,7 +6,7 @@
 
 import os
 
-from sphinx_sass import (
+from sphinxcontrib.sass import (
     chdir,
     compile_sass,
     compile_sass_config,
@@ -48,7 +48,7 @@ class TestConfig(BaseSphinxTestCase):
         expected = dict(entry='test.scss', output='test.css')
 
         conf_py = make_conf_py(
-            extensions=['sphinx_sass'], sass_configs=[expected])
+            extensions=['sphinxcontrib.sass'], sass_configs=[expected])
         self.create_file(
             os.path.join(self.srcdir, 'conf.py'), contents=conf_py)
 
@@ -381,7 +381,7 @@ class TestRunSass(BaseSphinxTestCase):
             contents='.document { h1, h2 { color: green; } }')
 
         conf_py = make_conf_py(
-            extensions=['sphinx_sass'], sass_configs=configs)
+            extensions=['sphinxcontrib.sass'], sass_configs=configs)
         self.create_file(
             os.path.join(self.srcdir, 'conf.py'), contents=conf_py)
         app = self.get_sphinx_app(confdir=self.srcdir)

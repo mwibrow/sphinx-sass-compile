@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import tempfile
 
-import sass
+import sass  # pylint: disable=all
 
 __version__ = '0.0.0'
 
