@@ -1,7 +1,7 @@
 
-.. |Package-name| replace:: **Sphinx-sass**
+.. |Package-name| replace:: **Sphinxcontrib-sass**
 
-.. |package-name| replace:: **sphinx-sass**
+.. |package-name| replace:: **sphinxcontrib-sass**
 
 .. |python| replace:: Python_
 .. _Python: https://docs.python.org/3.5/
