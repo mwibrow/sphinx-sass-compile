@@ -33,22 +33,23 @@ class ScssLexer(ExtendedRegexLexer):
 
         stack = ctx.stack
         ctx.stack = ['selector']
-        analysis = []
+        analyses = []
         try:
             for pos, token, text in self.get_tokens_unprocessed(context=ctx):
-                analysis.append((pos, token, text))
+                analyses.append((pos, token, text))
         except IndexError:
             pass
-        if analysis and analysis[-1][-1][-1] in ';}':
-            analysis = []
+        text = ''.join(analysis[-1] for analysis in analyses).strip()
+        if text and text[-1] in ';}':
+            analyses = []
             ctx.pos = match.start()
             ctx.stack = ['attribute']
             try:
                 for pos, token, text in self.get_tokens_unprocessed(context=ctx):
-                    analysis.append((pos, token, text))
+                    analyses.append((pos, token, text))
             except IndexError:
                 pass
-        for pos, token, text in analysis:
+        for pos, token, text in analyses:
             yield pos, token, text
         ctx.stack = stack
         ctx.pos = pos + len(text)
@@ -102,3 +103,10 @@ class ScssLexer(ExtendedRegexLexer):
         default('#pop')]
     tokens['else'] = [('if', Keyword, 'condition'), default('#pop')]
     tokens['value'].append((r'\$[\w-]', Name.Variable))
+    tokens['value'].append((r'}', Punctuation, '#pop'))
+    tokens['pseudo-class'] = [
+        (r'[\w-]+', Name.Decorator),
+        (r'#\{', String.Interpol, 'interpolation'),
+        include('value'),
+        default('#pop'),
+    ]
