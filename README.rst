@@ -4,16 +4,12 @@
 |license| |build status| |coverage|
 
 |Package-name| is a |Sphinx| extension
-which enables compilation of |SASS| and SCSS files to CSS
+which uses the Python binding of |libsass-python|
+to compule |SASS| and SCSS files to CSS
 when generating documentation for HTML output.
 
 For installation and configuration,
 see the `documentation <https://mwibrow.github.io/sphinx-sass/>`_.
-Acknowledgements
-----------------
-
-This extension makes use of the
-rather excellent |libsass-python| package.
 
 
 .. |Package-name| replace:: **Sphinx-sass**
